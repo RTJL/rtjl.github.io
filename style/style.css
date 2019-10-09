@@ -92,9 +92,31 @@
 
 #aboutDescription {
     padding-top: 50px;
-    padding-bottom: 50px;
+    padding-bottom: 0px;
     padding-left: 25px;
     padding-right: 25px;
+}
+
+#aboutProjectTitle {
+    background-color: #91C4F2;
+    display: block;
+    height: 200px;
+}
+
+#aboutProjectTitle-name {
+    font-size: 30px;
+    color: #2D5D7B;
+}
+
+#aboutProjectTitle-textbox {
+    position: absolute;
+    text-align: center;
+    /* transform: translate(-35%, -50%);
+    -ms-transform: translate(-35%, -50%); */
+    
+    /* width: 100%;
+    height: 100%;
+    vertical-align: middle; */
 }
 
 /*Carpark Portfolio*/

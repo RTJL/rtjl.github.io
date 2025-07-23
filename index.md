@@ -9,6 +9,9 @@ Results-driven Software Engineer with deep expertise in building scalable observ
 ---
 
 ## **Experience**
+**Grab** • Jun 2021 – Present
+- **Senior Software Engineer, Observability** • Apr 2023 – Present
+- **Software Engineer, Observability** • Jun 2021 – Apr 2023
 
 #### **Infrastructure Modernization & Logging Platform Migration**
 *Migrated Logging Pipelines Across AWS & Azure Environments*

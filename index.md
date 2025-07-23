@@ -25,14 +25,18 @@ Results-driven Software Engineer with deep expertise in building scalable observ
 
 ## **Certifications**
 
-- **ClickHouse Certified Developer** – ClickHouse ([Link](https://www.credly.com/badges/242ad1c2-b9cc-4c07-a896-d305cfc7a34f/public_url)
+- **ClickHouse Certified Developer** – ClickHouse ([Link](https://www.credly.com/badges/242ad1c2-b9cc-4c07-a896-d305cfc7a34f/public_url))
+
   *Issued: Feb 2025*
 
 - **Python 3 Programming Specialization** – Coursera ([Link](https://www.coursera.org/account/accomplishments/specialization/X3JUDTYN5XQE))
+
   *Issued: Jul 2024*
 
 - **AWS Certified Cloud Practitioner** – Amazon Web Services ([Link](https://www.credly.com/badges/8b3d865d-e97a-4fbd-a4ba-c9e528c17a92/public_url))
+
   *Issued: Dec 2020*
 
 - **HashiCorp Certified: Terraform Associate** – HashiCorp ([Link](https://www.credly.com/badges/e9ef217d-dba0-4a8e-a477-af36b179418d))
+
   *Issued: Dec 2020*

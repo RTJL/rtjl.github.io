@@ -13,6 +13,8 @@ Results-driven Software Engineer with deep expertise in building scalable observ
 - **Senior Software Engineer, Observability** • Apr 2023 – Present
 - **Software Engineer, Observability** • Jun 2021 – Apr 2023
 
+---
+
 #### **Infrastructure Modernization & Logging Platform Migration**
 *Migrated Logging Pipelines Across AWS & Azure Environments*
 - Executed large-scale migration from legacy ELK & ADX logging stacks to OpenSearch.

@@ -15,6 +15,19 @@ Results-driven Software Engineer with deep expertise in building scalable observ
 
 ---
 
+#### **SLA Monitoring Platform**
+*Re-architecture, Performance Engineering, and System Optimization*
+- Led architectural overhaul of platform to reduce downtime risk and improve reliability.
+- Migrated time-series DB from InfluxDB to ClickHouse, reducing P99 query latency by **49%**.
+- Designed optimized OLAP schemas for datasets exceeding **2 billion rows**.
+- Improved metric collection granularity from 30min → **1min**, increasing resolution by **30x**.
+- Refactored SLI calculation logic to API layer, reducing code complexity and improving maintainability.
+- Developed query optimizer to reduce Datadog API usage by **55%**.
+- Implemented configurable exclusion windows and finer time granularity (10s) for SLI calculations.
+- Reduced infrastructure costs by **$53K/year** by rightsizing Kafka clusters and ClickHouse nodes.
+
+---
+
 #### **Infrastructure Modernization & Logging Platform Migration**
 *Migrated Logging Pipelines Across AWS & Azure Environments*
 - Executed large-scale migration from legacy ELK & ADX logging stacks to OpenSearch.

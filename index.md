@@ -8,12 +8,19 @@ Results-driven software engineer with deep expertise in building scalable observ
 
 ---
 
-## **Experience**
-**Grab** • Jun 2021 – Present
-- **Senior Software Engineer, Observability** • Apr 2023 – Present
-- **Software Engineer, Observability** • Jun 2021 – Apr 2023
+## **Technical Skills**
+- **Languages:** Python, Java, SQL
+- **Cloud Platform:** AWS
+- **Data & Observability:** Grafana, ClickHouse, Datadog, OpenSearch (ELK)
+- **DevOps & Tooling:** Terraform, Ansible
 
 ---
+
+## **Experience**
+
+### **Grab** • Jun 2021 – Present
+- **Senior Software Engineer, Observability** • Apr 2023 – Present
+- **Software Engineer, Observability** • Jun 2021 – Apr 2023
 
 #### **SLA Monitoring Platform**
 *Re-architecture, Performance Engineering, and System Optimization*
@@ -25,8 +32,6 @@ Results-driven software engineer with deep expertise in building scalable observ
 - Implemented configurable exclusion windows and finer time granularity (10secs) for SLI calculations.
 - Reduced infrastructure costs by **$50+K/year** by rightsizing Kafka clusters and ClickHouse nodes.
 
----
-
 #### **Infrastructure Modernization & Logging Platform Migration**
 *Migrated Logging Pipelines Across AWS & Azure Environments*
 - Executed large-scale migration from legacy ELK & ADX logging stacks to OpenSearch.
@@ -35,16 +40,24 @@ Results-driven software engineer with deep expertise in building scalable observ
 - Enabled cost savings of **$40+K/month** and eliminated redundant cloud deployments.
 - Adapted automation pipelines to multiple deployment systems (Jenkins → AWX → SSM)
 
----
-
 #### **Chargeback Platform**
 *Cost Reporting System Design*
 - Designed and implemented an internal chargeback system for metrics and logging infrastructure, handling **petabyte-scale log volumes**.
 - Engineered pipelines to map raw platform usage to detailed cost attribution across services.
 - Improved cost attribution accuracy by migrating log data tagging from inconsistent formats to unified service-level identifiers.
-- Validated tagging changes across **petabyte-scale logging clusters**, ensuring invoice alignment with <3% variance.
+- Validated tagging changes across **petabyte-scale logging cluster**, ensuring invoice alignment with <3% variance.
 - Added cost telemetry to Datadog dashboards to drive accountability within engineering orgs.
 - Automated daily cost ingestion, processing, and report generation for OpenSearch and Datadog.
+
+### **StrongArm Tech** • Jan 2020 – Aug 2020
+
+*New York, United States of America*
+
+**Software Engineer Intern**
+
+- Led the design and development of RESTful APIs for a customer-facing web application using a test-driven development (TDD) approach.
+- Improved API response times by over **30%**, enhancing user experience and contributing to cost efficiency.
+- Implemented monitoring and alerting with Datadog for a serverless architecture using **AWS API Gateway** and **Lambda**, including dashboards and custom alerts.
 
 ---
 
@@ -65,3 +78,18 @@ Results-driven software engineer with deep expertise in building scalable observ
 - **HashiCorp Certified: Terraform Associate** – HashiCorp ([Link](https://www.credly.com/badges/e9ef217d-dba0-4a8e-a477-af36b179418d))
 
   *Issued: Dec 2020*
+
+---
+
+## **Education**
+**National University of Singapore**
+
+Bachelor of Computing in Computer Science
+
+2021
+
+**Singapore Polytechnic**
+
+Diploma in Infocomm Security Management with Merit
+
+2015

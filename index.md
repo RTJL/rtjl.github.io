@@ -4,7 +4,7 @@
 ---
 
 ## **Professional Summary**  
-Results-driven Software Engineer with deep expertise in building scalable observability systems, infrastructure automation, and performance optimization. Experienced in designing and re-architecting large-scale systems, optimizing data pipelines, and implementing cost-effective cloud infrastructure. Proven ability to lead critical backend engineering efforts across distributed teams while consistently delivering measurable impact.
+Results-driven software engineer with deep expertise in building scalable observability systems, infrastructure automation, and performance optimization. Experienced in designing and re-architecting large-scale systems, optimizing data pipelines, and implementing cost-effective cloud infrastructure. Proven ability to lead critical backend engineering efforts across distributed teams while consistently delivering measurable impact.
 
 ---
 
@@ -20,11 +20,10 @@ Results-driven Software Engineer with deep expertise in building scalable observ
 - Led architectural overhaul of platform to reduce downtime risk and improve reliability.
 - Migrated time-series DB from InfluxDB to ClickHouse, reducing P99 query latency by **49%**.
 - Designed optimized OLAP schemas for datasets exceeding **2 billion rows**.
-- Improved metric collection granularity from 30min → **1min**, increasing resolution by **30x**.
 - Refactored SLI calculation logic to API layer, reducing code complexity and improving maintainability.
 - Developed query optimizer to reduce Datadog API usage by **55%**.
-- Implemented configurable exclusion windows and finer time granularity (10s) for SLI calculations.
-- Reduced infrastructure costs by **$53K/year** by rightsizing Kafka clusters and ClickHouse nodes.
+- Implemented configurable exclusion windows and finer time granularity (10secs) for SLI calculations.
+- Reduced infrastructure costs by **$50+K/year** by rightsizing Kafka clusters and ClickHouse nodes.
 
 ---
 

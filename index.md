@@ -23,6 +23,17 @@ Results-driven Software Engineer with deep expertise in building scalable observ
 
 ---
 
+#### **Chargeback Platform**
+*Cost Reporting System Design*
+- Designed and implemented an internal chargeback system for metrics and logging infrastructure, handling **petabyte-scale log volumes**.
+- Engineered pipelines to map raw platform usage to detailed cost attribution across services.
+- Improved cost attribution accuracy by migrating log data tagging from inconsistent formats to unified service-level identifiers.
+- Validated tagging changes across **petabyte-scale logging clusters**, ensuring invoice alignment with <3% variance.
+- Added cost telemetry to Datadog dashboards to drive accountability within engineering orgs.
+- Automated daily cost ingestion, processing, and report generation for OpenSearch and Datadog.
+
+---
+
 ## **Certifications**
 
 - **ClickHouse Certified Developer** – ClickHouse ([Link](https://www.credly.com/badges/242ad1c2-b9cc-4c07-a896-d305cfc7a34f/public_url))

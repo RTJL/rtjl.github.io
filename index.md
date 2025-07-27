@@ -74,6 +74,18 @@ Results-driven software engineer with deep expertise in building scalable observ
 
 ---
 
+## **Projects**
+
+### **Automated Incident Investigation using LLMs**
+*LLM-powered Observability Assistant*
+- Developed an API-based observability tool that uses **large language models (LLMs)** to automate the initial investigation of software incidents.
+- Consolidates signals from systems like **Datadog** and **OpenSearch** into a unified **Grafana dashboard**, reducing manual triage effort for on-call engineers.
+- Designed modular "Analyzers" to handle specific troubleshooting flows such as infrastructure issues, Go panics, and Hystrix failures.
+- Integrated with **Datadog alerts** and API triggers to automatically provide contextual health summaries at the start of an incident.
+- Focused on generating a concise system state overview, enabling faster response.
+
+---
+
 ## **Certifications**
 
 - **ClickHouse Certified Developer** – ClickHouse ([Link](https://www.credly.com/badges/242ad1c2-b9cc-4c07-a896-d305cfc7a34f/public_url))

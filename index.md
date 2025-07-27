@@ -3,7 +3,7 @@
 
 ---
 
-## **Professional Summary**  
+## **Professional Summary**
 Results-driven software engineer with deep expertise in building scalable observability systems, infrastructure automation, and performance optimization. Experienced in designing and re-architecting large-scale systems, optimizing data pipelines, and implementing cost-effective cloud infrastructure. Proven ability to lead critical backend engineering efforts across distributed teams while consistently delivering measurable impact.
 
 ---
@@ -21,6 +21,19 @@ Results-driven software engineer with deep expertise in building scalable observ
 ### **Grab** • Jun 2021 – Present
 - **Senior Software Engineer, Observability** • Apr 2023 – Present
 - **Software Engineer, Observability** • Jun 2021 – Apr 2023
+
+#### **Logging Platform – ClickHouse Feasibility Study**
+*Proof of Concept & Cost Optimization*
+- Led a successful POC demonstrating that ClickHouse could replace OpenSearch for log analytics, enabling a **~45% cost reduction** of OpenSearch components.
+- Achieved **93% query compatibility** with OpenSearch and improved performance in **88% of tested queries** without requiring user-side changes.
+- Built a query converter and benchmarking tool to evaluate performance and compatibility at scale.
+- Deployed and tested log ingestion pipelines on STG and PRD ClickHouse clusters; analyzed results to validate production readiness.
+
+#### **Logging Platform – BCDR Support**
+*Disaster Recovery Logging Environment*
+- Provisioned a functional logging cluster to support service observability in the **Business Continuity & Disaster Recovery (BCDR)** environment.
+- Configured components including OpenSearch Dashboards, Logstash, and data nodes via Ansible automation.
+- Enhanced the infrastructure initialization repository to support the BCDR use case, ensuring seamless environment setup and log flow continuity.
 
 #### **SLA Monitoring Platform**
 *Re-architecture, Performance Engineering, and System Optimization*

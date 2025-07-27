@@ -68,3 +68,73 @@ class Solution:
         return res
 ```
 
+## Number of 1 bits
+
+1. Get the remainder mod by 2, add to result.
+
+2. Keep on shifting the bits to the right by 1 per iteraction.
+
+### Time
+
+`O(1)`
+
+### Space
+
+`O(1)`
+
+```python
+class Solution:
+    def hammingWeight(self, n: int) -> int:
+        res = 0
+        while n > 0:
+            res += n % 2
+            n = n >> 1
+
+        return res
+```
+
+## Implement Trie (Prefix Tree)
+
+Tree with multiple children nodes
+
+```python
+class Trie:
+
+    def __init__(self):
+        self.is_leaf = False
+        self.children = {}
+
+    def insert(self, word: str) -> None:
+        node = self
+        for c in word:
+            if c in node.children:
+                node = node.children[c]
+            else:
+                new_node = Trie()
+                node.children[c] = new_node
+                node = node.children[c]
+
+        node.is_leaf = True
+
+    def search(self, word: str) -> bool:
+        node = self
+
+        for c in word:
+            if c in node.children:
+                node = node.children[c]
+            else:
+                return False
+
+        return node.is_leaf
+
+    def startsWith(self, prefix: str) -> bool:
+        node = self
+
+        for c in prefix:
+            if c in node.children:
+                node = node.children[c]
+            else:
+                return False
+
+        return True
+```

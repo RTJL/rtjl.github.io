@@ -138,3 +138,43 @@ class Trie:
 
         return True
 ```
+
+## Count Number of Maximum Bitwise-OR Subsets
+
+Calculate the max bitwise value.
+
+Just recursively generate all possible sets.
+
+### Time
+
+`O(2^n)`
+
+### Space
+
+`O(n)`
+
+Tree up till `n` levels deep
+
+```python
+class Solution:
+    def countMaxOrSubsets(self, nums: List[int]) -> int:
+        # max value
+        max_val = 0
+        for n in nums:
+            max_val = max_val | n
+
+        def calculate(res, index):
+            # base case
+            if index >= len(nums):
+                return res == max_val
+
+            # include current index
+            with_curr = calculate(res | nums[index], index + 1)
+
+            # skip current index
+            without_curr = calculate(res, index + 1)
+
+            return with_curr + without_curr
+
+        return calculate(0, 0)
+```

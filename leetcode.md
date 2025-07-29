@@ -178,3 +178,108 @@ class Solution:
 
         return calculate(0, 0)
 ```
+
+## Smallest Subarrays With Maximum Bitwise OR
+
+Store the minimum index where a bit(1) is set.
+
+Use it to determine the smallest subarray length where it will meet the max bitwise OR value.
+
+### Time
+
+`O(n x logB)`
+
+`logB` is the number of bits for one of the num.
+
+### Space
+
+`O(logB)`
+
+`logB` is the number of bits, the `bit_position_lst` variable.
+
+```python
+class Solution:
+    def smallestSubarrays(self, nums: List[int]) -> List[int]:
+        if len(nums) == 1:
+            return [1]
+
+        # 10^9 value need 31bits
+        # use -1 to indicate that never see this bit at position before
+        bit_position_lst = [-1] * 31
+
+        # result list
+        res = [1] * len(nums)
+
+        # max or
+        max_or = 0
+
+        for i in range(len(nums) - 1, -1, -1):
+            # convert current number into binary
+            # update the bit_position_lst
+            curr_num = nums[i]
+            max_or = max_or | curr_num
+
+            # handle special case
+            if max_or == 0:
+                res[i] = 1
+                continue
+
+            index = 0
+            while curr_num > 0:
+                bit = curr_num % 2
+                if bit == 1:
+                    if bit_position_lst[index] == -1:
+                        bit_position_lst[index] = i
+                    else:
+                        bit_position_lst[index] = min(bit_position_lst[index], i)
+
+                curr_num = curr_num // 2
+                index += 1
+
+            res[i] = max(bit_position_lst) - i + 1
+        return res
+```
+
+Brute force, double for loop.
+
+### Time
+
+`O(n^2)`
+
+### Space
+
+`O(n)`
+
+Need to store the `max_or_lst`.
+
+```python
+class Solution:
+    def smallestSubarrays(self, nums: List[int]) -> List[int]:
+        # get the max OR value start from current
+        max_or_lst = [0] * len(nums)
+        max_or_lst[len(nums) - 1] = nums[len(nums) - 1]
+        for i in range(len(nums) - 2, -1, -1):
+            max_or_lst[i] = max_or_lst[i + 1] | nums[i]
+
+        # result
+        res = []
+
+        # double for loop
+        for i in range(len(nums)):
+            curr = nums[i]
+
+            # the number itself is the max_or value
+            # so shortest will be 1
+            if curr == max_or_lst[i]:
+                res.append(1)
+                continue
+
+            for j in range(i + 1, len(nums)):
+                curr = curr | nums[j]
+
+                if curr == max_or_lst[i]:
+                    res.append(j - i + 1)
+                    break
+
+        return res
+```

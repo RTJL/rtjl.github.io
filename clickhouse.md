@@ -122,3 +122,119 @@ Notes about ClickHouse.
     (ReadFromMergeTree)
     MergeTreeSelect(pool: PrefetchedReadPool, algorithm: Thread) × 30
     ```
+
+## Two Array Columns (Map)
+
+[PR docs](https://github.com/ClickHouse/ClickHouse/pull/72517)
+
+### Setup
+
+1. 1 column is to store the key, other column is to store the value.
+
+    ```sql
+    CREATE TABLE testing_array (
+        `pid` String,
+
+        `keys` Array(String),
+        `values` Array(String),
+
+        `random_keys` Array(String),
+        `random_values` Array(String),
+
+        `sorted_key_value` Array(Tuple(String, String)) MATERIALIZED arraySort(arrayZip(random_keys, random_values)),
+        `sorted_keys` Array(String) ALIAS arrayMap(x -> x.1, sorted_key_value),
+        `sorted_values` Array(String) ALIAS arrayMap(x -> x.2, sorted_key_value),
+
+        `sorted_keys_mat` Array(String) MATERIALIZED arrayMap(x -> x.1, sorted_key_value),
+        `sorted_values_mat` Array(String) MATERIALIZED arrayMap(x -> x.2, sorted_key_value)
+    ) ENGINE = MergeTree
+    ORDER BY pid;
+    ```
+
+2. Insert sample data and randomise the key order.
+
+    ```sql
+    INSERT INTO testing_array
+    SELECT
+        'abc',
+        ['LineId', 'Time', 'Level', 'Content', 'EventId', 'EventTemplate'] AS keys,
+        [toString(LineId), Time, Level, Content, EventId, EventTemplate] AS values,
+        arrayMap(x -> x.1, shuffled) AS random_keys,
+        arrayMap(x -> x.2, shuffled) AS random_values
+    FROM (
+        SELECT
+            LineId, Time, Level, Content, EventId, EventTemplate,
+            arrayShuffle(arrayZip(
+                ['LineId', 'Time', 'Level', 'Content', 'EventId', 'EventTemplate'],
+                [toString(LineId), Time, Level, Content, EventId, EventTemplate]
+            )) AS shuffled
+        FROM file('Apache_2k.log_structured.csv')
+    );
+    ```
+
+### Results
+
+| setup | time (sec) | memory (kib) |
+| - | - | - |
+| random order | 0.005 | 59.57 |
+| sorted order (alias) | 0.013 | 62.90 |
+| sorted order (materialised) | 0.003 | 62.80 |
+
+- Query using the random order columns.
+
+    ```sql
+    SELECT count()
+    FROM testing_array
+    WHERE (random_values[indexOf(random_keys, 'Content')]) ILIKE '%m%'
+    FORMAT `NULL`
+    SETTINGS enable_filesystem_cache = 0
+
+    Query id: 922abe7a-faaa-440c-add2-58ecd82a4cef
+
+    Ok.
+
+    0 rows in set. Elapsed: 0.005 sec. Processed 2.00 thousand rows, 576.76 KB (390.80 thousand rows/s., 112.70 MB/s.)
+    Peak memory usage: 59.57 KiB.
+    ```
+
+- Query using the sorted order alias columns.
+
+    ```sql
+    SELECT count()
+    FROM testing_array
+    WHERE (sorted_values[indexOfAssumeSorted(sorted_keys, 'Content')]) ILIKE '%m%'
+    FORMAT `NULL`
+    SETTINGS enable_filesystem_cache = 0
+
+    Query id: 30442161-538f-4862-94ce-6a92840488b8
+
+    Ok.
+
+    0 rows in set. Elapsed: 0.013 sec. Processed 2.00 thousand rows, 560.76 KB (148.64 thousand rows/s., 41.67 MB/s.)
+    Peak memory usage: 62.90 KiB.
+    ```
+
+- Query using the sorted order materialised columns.
+
+    ```sql
+    SELECT count()
+    FROM testing_array
+    WHERE (sorted_values_mat[indexOfAssumeSorted(sorted_keys_mat, 'Content')]) ILIKE '%m%'
+    FORMAT `NULL`
+    SETTINGS enable_filesystem_cache = 0
+
+    Query id: 2d57123a-a420-4d9d-8c74-86cb22bd7f60
+
+    Ok.
+
+    0 rows in set. Elapsed: 0.003 sec. Processed 2.00 thousand rows, 576.76 KB (756.85 thousand rows/s., 218.26 MB/s.)
+    Peak memory usage: 62.80 KiB.
+    ```
+
+
+
+- Why sorted alias column take longer than random order?
+
+- Why sorted alias/materialised column take more memory than random order?
+
+- What other settings to use for benchmarking? (Format null/enable_filesystem_cache = 0)

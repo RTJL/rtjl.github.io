@@ -283,3 +283,36 @@ class Solution:
 
         return res
 ```
+
+## Longest Subarray With Maximum Bitwise AND
+
+> let k be the maximum value of the bitwise AND of any subarray of nums
+
+k is just the maximum value in nums, because a number on its own is also a subarray.
+
+Find how many contiguous blocks of k, then choose the maximum contiguous block.
+
+### Time
+
+`O(n)`
+
+### Space
+
+`O(1)`
+
+```python
+class Solution:
+    def longestSubarray(self, nums: List[int]) -> int:
+        max_num = max(nums)
+
+        count = 0
+        res = 0
+        for n in nums:
+            if n == max_num:
+                count += 1
+            else:
+                res = max(res, count)
+                count = 0
+
+        return max(res, count)
+```

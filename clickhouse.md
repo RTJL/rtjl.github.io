@@ -771,6 +771,18 @@ Notes about ClickHouse.
       FUNCTION ilike(arrayElement(__table1.sorted_values, indexOfAssumeSorted(__table1.sorted_keys, 'Content'_String)) :: 3, '%m%'_String :: 4) -> ilike(arrayElement(__table1.sorted_values, indexOfAssumeSorted(__table1.sorted_keys, 'Content'_String)), '%m%'_String) UInt8 : 0
     ```
 
+  - sorted materialised
+
+    ```
+    Actions: INPUT : 0 -> sorted_values_mat Array(String) : 0
+      INPUT : 1 -> sorted_keys_mat Array(String) : 1
+      COLUMN Const(String) -> 'Content'_String String : 2
+      COLUMN Const(String) -> '%m%'_String String : 3
+      FUNCTION indexOfAssumeSorted(sorted_keys_mat :: 1, 'Content'_String :: 2) -> indexOfAssumeSorted(__table1.sorted_keys_mat, 'Content'_String) UInt64 : 4
+      FUNCTION arrayElement(sorted_values_mat :: 0, indexOfAssumeSorted(__table1.sorted_keys_mat, 'Content'_String) :: 4) -> arrayElement(__table1.sorted_values_mat, indexOfAssumeSorted(__table1.sorted_keys_mat, 'Content'_String)) String : 2
+      FUNCTION ilike(arrayElement(__table1.sorted_values_mat, indexOfAssumeSorted(__table1.sorted_keys_mat, 'Content'_String)) :: 2, '%m%'_String :: 3) -> ilike(arrayElement(__table1.sorted_values_mat, indexOfAssumeSorted(__table1.sorted_keys_mat, 'Content'_String)), '%m%'_String) UInt8 : 4
+    ```
+
   Each row for sorted alias, it needs to 
   - FUNCTION arrayMap(x Tuple(String, String) -> ...
   - FUNCTION arrayMap(x Tuple(String, String) -> ...

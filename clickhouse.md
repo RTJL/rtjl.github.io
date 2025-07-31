@@ -631,34 +631,34 @@ Notes about ClickHouse.
 
     ```sql
     WITH
-        '922abe7a-faaa-440c-add2-58ecd82a4cef' AS qid1,
-        '30442161-538f-4862-94ce-6a92840488b8' AS qid2
+      '922abe7a-faaa-440c-add2-58ecd82a4cef' AS qid1,
+      '30442161-538f-4862-94ce-6a92840488b8' AS qid2
     SELECT
-        event,
-        any(value1) AS random,
-        any(value2) AS sorted_alias,
-        CASE
-            WHEN random < sorted_alias THEN 'random'
-            WHEN random > sorted_alias THEN 'alias sorted'
-            ELSE ''
-        END AS faster,
-        abs(random - sorted_alias) AS difference,
-        max(random, sorted_alias)/min(random, sorted_alias) AS difference_times
+      event,
+      any(value1) AS random,
+      any(value2) AS sorted_alias,
+      CASE
+        WHEN random < sorted_alias THEN 'random'
+        WHEN random > sorted_alias THEN 'alias sorted'
+        ELSE ''
+      END AS faster,
+      abs(random - sorted_alias) AS difference,
+      max2(random, sorted_alias)/min2(random, sorted_alias) AS difference_times
     FROM
     (
-        SELECT
-            arrayJoin(mapKeys(ProfileEvents)) AS event,
-            ProfileEvents[event] AS value1,
-            null AS value2
-        FROM system.query_log
-        WHERE query_id = qid1 AND type = 'QueryFinish'
-        UNION ALL
-        SELECT
-            arrayJoin(mapKeys(ProfileEvents)) AS event,
-            null AS value1,
-            ProfileEvents[event] AS value2
-        FROM system.query_log
-        WHERE query_id = qid2 AND type = 'QueryFinish'
+      SELECT
+        arrayJoin(mapKeys(ProfileEvents)) AS event,
+        ProfileEvents[event] AS value1,
+        null AS value2
+      FROM system.query_log
+      WHERE query_id = qid1 AND type = 'QueryFinish'
+      UNION ALL
+      SELECT
+        arrayJoin(mapKeys(ProfileEvents)) AS event,
+        null AS value1,
+        ProfileEvents[event] AS value2
+      FROM system.query_log
+      WHERE query_id = qid2 AND type = 'QueryFinish'
     )
     GROUP BY event
     ORDER BY faster, difference;
@@ -736,6 +736,7 @@ Notes about ClickHouse.
 - Why sorted alias column take longer than random order?
 
   ```
+      ┌─event───────────────────────────────────────────┬─random─┬─sorted_alias─┬─faster───────┬─difference─┬───difference_times─┐
   53. │ FunctionExecute                                 │      6 │           24 │ random       │         18 │                  4 │
       └─event───────────────────────────────────────────┴─random─┴─sorted_alias─┴─faster───────┴─difference─┴───difference_times─┘
   ```

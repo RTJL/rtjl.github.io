@@ -316,3 +316,64 @@ class Solution:
 
         return max(res, count)
 ```
+
+## Bitwise ORs of Subarrays
+
+Optimised brute force
+
+### Time
+
+`O(n x w)`
+
+`w` is the number of bits required to store the maximum number in the array
+
+### Space
+
+`O(n x w)`
+
+`w` is the number of bits required to store the maximum number in the array
+
+```python
+class Solution:
+    def subarrayBitwiseORs(self, arr: List[int]) -> int:
+        res_set = set()
+
+        cache_set = set()
+        for i in range(len(arr) - 1, -1, -1):
+            new_set = set()
+            for n in cache_set:
+                new = arr[i] | n
+                new_set.add(new)
+
+            new_set.add(arr[i])
+            res_set.update(new_set)
+            cache_set = new_set
+
+        return len(res_set)
+```
+
+Brute force
+
+### Time
+
+`O(n^2)`
+
+### Space
+
+`O(n)`
+
+```python
+class Solution:
+    def subarrayBitwiseORs(self, arr: List[int]) -> int:
+        res = set()
+
+        for i in range(len(arr)):
+            res.add(arr[i])
+            tmp = arr[i]
+
+            for j in range(i + 1, len(arr)):
+                tmp = tmp | arr[j]
+                res.add(tmp)
+
+        return len(res)
+```

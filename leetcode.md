@@ -411,3 +411,75 @@ class Solution:
 
         return res
 ```
+
+## Rearranging Fruits
+
+Trick is also can swap 2x with the minimum number, in addition to just swap from basket1 to basket2.
+
+if need to swap `basket1[i]` <--> `basket2[j]`, compare both `min(basket1[i], basket1[j])` & `2 x min(all numbers in basket1/2)`.
+
+### Time
+
+`O(nlogn)`
+
+### Space
+
+`O(n)`
+
+```python
+class Solution:
+    def minCost(self, basket1: List[int], basket2: List[int]) -> int:
+        count = {}
+
+        for n in basket1:
+            if n in count:
+                count[n][0] += 1
+                count[n][2] += 1
+            else:
+                # [basket1, basket2, total]
+                count[n] = [1, 0, 1]
+
+        for n in basket2:
+            if n in count:
+                count[n][1] += 1
+                count[n][2] += 1
+            else:
+                # [basket1, basket2, total]
+                count[n] = [0, 1, 1]
+
+        trans_b1 = []
+        trans_b2 = []
+
+        for n in count.keys():
+            total = count[n][2]
+            if total % 2 != 0:
+                return -1
+
+            per_basket = total//2
+            if count[n][0] > per_basket:
+                # basket1 too many of this item
+                trans_b1 += [n] * (count[n][0] - per_basket)
+            elif count[n][1] > per_basket:
+                # basket2 too many of this item
+                trans_b2 += [n] * (count[n][1] - per_basket)
+
+        trans_b1.sort()
+        trans_b2.sort()
+
+        res = 0
+        b1_indx = 0
+        b2_indx = 0
+        min_num = min(list(count.keys())) * 2
+
+        for _ in range(len(trans_b1)):
+            if min_num < trans_b1[b1_indx] and min_num < trans_b2[b2_indx]:
+                res += min_num
+            elif trans_b1[b1_indx] < trans_b2[b2_indx]:
+                res += trans_b1[b1_indx]
+                b1_indx += 1
+            else:
+                res += trans_b2[b2_indx]
+                b2_indx += 1
+
+        return res
+```

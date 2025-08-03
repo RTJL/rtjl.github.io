@@ -483,3 +483,80 @@ class Solution:
 
         return res
 ```
+
+## Maximum Fruits Harvested After at Most K Steps
+
+Check move 1 way(left or right only) how much max
+
+Check move left+right or right+left max how much
+
+Optimise using a prefix sum array
+
+### Time
+
+`O(n + k)`
+
+### Space
+
+`O(k)`
+
+```python
+class Solution:
+    def maxTotalFruits(self, fruits: List[List[int]], startPos: int, k: int) -> int:
+        res = 0
+
+        left_lst = [0] * k
+        right_lst = [0] * k
+
+        left_limit = startPos - k
+        right_limit = startPos + k
+
+        for fruit in fruits:
+            curr_pos = fruit[0]
+            curr_count = fruit[1]
+
+            if curr_pos == startPos:
+                # startPos already has fruits
+                res += curr_count
+            elif curr_pos >= left_limit and curr_pos < startPos:
+                # left side
+                left_index = startPos - curr_pos - 1
+                left_lst[left_index] = curr_count
+            elif curr_pos <= right_limit and curr_pos > startPos:
+                # right side
+                right_index = curr_pos - startPos - 1
+                right_lst[right_index] = curr_count
+            elif curr_pos > right_limit:
+                break
+
+        # add the prefix sum
+        for i in range(1, k):
+            left_lst[i] = left_lst[i] + left_lst[i - 1]
+            right_lst[i] = right_lst[i] + right_lst[i - 1]
+
+        # with movement
+        tmp = 0
+        if k > 0:
+            max_one_way = max(left_lst[-1], right_lst[-1])
+            max_two_way = 0
+            for i in range(1, k//2 + 1):
+                # get the index positions
+                index_one = i - 1
+                index_two = k - (2 * i) - 1
+
+                # go left then right
+                left_count = left_lst[index_one] if index_one >= 0 else 0
+                right_count = right_lst[index_two] if index_two >= 0 else 0
+                left_right_count = left_count + right_count
+
+                # go right then left
+                left_count = left_lst[index_two] if index_two >= 0 else 0
+                right_count = right_lst[index_one] if index_one >= 0 else 0
+                right_left_count = left_count + right_count
+
+                max_two_way = max(max_two_way, max(left_right_count, right_left_count))
+
+            tmp = max(max_one_way, max_two_way)
+
+        return res + tmp
+```

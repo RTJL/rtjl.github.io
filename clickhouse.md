@@ -793,3 +793,78 @@ Notes about ClickHouse.
 - Why sorted alias/materialised column take more memory than random order?
 
 - What other settings to use for benchmarking? (Format null/enable_filesystem_cache = 0)
+
+## Inserts ([ref](https://clickhouse.com/blog/supercharge-your-clickhouse-data-loads-part1))
+
+Settings to optimise for huge inserts
+
+### Ways to insert
+
+- Clickhouse ownself pull
+- Data pushed into Clickhouse
+
+#### Clickhouse ownself pull
+
+1. pull from source
+
+  until either one is reached first
+
+  - `min_insert_block_size_rows`
+
+    Default is 1,048,545 rows (~1m)
+
+  - `min_insert_block_size_bytes`
+
+    Default is 256 MiB
+
+    This is **not** compressed size
+
+2. write to disk
+
+  Write as a new part
+
+#### Data pushed into Clickhouse
+
+- Synchronous
+- Asynchronous
+
+##### Synchronous Inserts
+
+- Clickhouse form the blocks
+- Client form the blocks
+
+###### Clickhouse form the blocks
+
+Example like JDBC
+
+1. Client execute insert query, push to Clickhouse
+
+2. Clickhouse write to disk
+
+  Each insert == 1 block, unless insert size > `max_insert_block_size`
+
+  If > `max_insert_block_size`, split into 2 blocks.
+
+###### Client form the blocks
+
+Example when using clickhouse-client, or language specific libraries (Go/Python/C++).
+
+1. Client form the block, send to Clickhouse native format
+
+  Inside the clickhouse-client, can specify the `max_insert_block_size`.
+
+  This is the controlling one.
+
+2. Block will get written to Clickhouse disk
+
+##### Asynchronous Inserts
+
+Clickhouse WILL ALWAYS control the block size.
+
+1. Client insert, write into buffer(memory)
+
+2. Clickhouse flush the buffer, write into blocks and into disk
+
+  `max_insert_block_size` setting will control the block size.
+
+### Insert parallelism

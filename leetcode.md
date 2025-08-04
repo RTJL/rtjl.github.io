@@ -560,3 +560,50 @@ class Solution:
 
         return res + tmp
 ```
+
+## Fruit Into Baskets
+
+Sliding window
+
+### Time
+
+`O(n)`
+
+### Space
+
+`O(1)`
+
+Map is fixed size of 2.
+
+```python
+class Solution:
+    def totalFruit(self, fruits: List[int]) -> int:
+        left_index = 0
+
+        # count the left & right items how many
+        counter = {
+            fruits[left_index]: 1
+        }
+
+        res = 1
+
+        for i in range(1, len(fruits)):
+            # shrink left if current fruit not inside & already got 2 fruits
+            while fruits[i] not in counter and len(counter.keys()) > 1 and left_index < i:
+                # reduce count
+                counter[fruits[left_index]] -= 1
+
+                # remove if the value is 0
+                if counter[fruits[left_index]] == 0:
+                    counter.pop(fruits[left_index])
+
+                # move the left_index forward
+                left_index += 1
+
+            # add the current fruit
+            current_count = counter.get(fruits[i], 0) + 1
+            counter[fruits[i]] = current_count
+
+            res = max(res, sum(counter.values()))
+        return res
+```

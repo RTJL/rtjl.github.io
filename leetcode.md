@@ -607,3 +607,37 @@ class Solution:
             res = max(res, sum(counter.values()))
         return res
 ```
+
+## Fruits Into Baskets II
+
+### Time
+
+`O(n^2)`
+
+### Space
+
+`O(n)`
+
+If update input varibales, then can become `O(1)`
+
+```python
+class Solution:
+    def numOfUnplacedFruits(self, fruits: List[int], baskets: List[int]) -> int:
+        used_basket_index = set()
+
+        res = len(fruits)
+
+        for f in fruits:
+            for i, b in enumerate(baskets):
+                if i in used_basket_index:
+                    continue
+
+                if b >= f:
+                    used_basket_index.add(i)
+                    res -= 1
+                    break
+
+        return res
+```
+
+##

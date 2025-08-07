@@ -2,7 +2,12 @@
 
 Notes about ClickHouse.
 
-## Partitions ([ref](https://clickhouse.com/docs/optimize/partitioning-key))
+- Partitions
+- Query Parallelism
+- Two array columns (map)
+- Inserts
+
+## Partitions ([ref](https://clickhouse.com/docs/optimize/partitioning-key)) <a name="introduction"></a>
 
 - 1 insert == 1 part PER partition
 
@@ -798,6 +803,21 @@ Notes about ClickHouse.
 
 Settings to optimise for huge inserts
 
+TLDR;
+
+- Need to balance the size of each insert VS number of inserts
+- Bigger size of each insert (bottleneck by memory)
+  - Good<br>
+    Reduce number of parts(files) -> reduce number of future part merges -> reduce CPU load for merges
+  - Bad<br>
+    Too big then OOM (insert data store in memory -> once reach block limit -> compress & write to disk)
+- Reduce number of inserts (bottleneck by CPU)
+  - Good<br>
+    Maybe more real-time, reduce the time between insert & querable
+  - Bad<br>
+    Too many number of parts(files) -> Increase number of future part merges -> Increase CPU load for merges
+
+
 ### Ways to insert
 
 - Clickhouse ownself pull
@@ -807,7 +827,7 @@ Settings to optimise for huge inserts
 
 1. pull from source
 
-  until either one is reached first
+    until either one is reached first
 
   - `min_insert_block_size_rows`
 
@@ -821,7 +841,7 @@ Settings to optimise for huge inserts
 
 2. write to disk
 
-  Write as a new part
+    Write as a new part
 
 #### Data pushed into Clickhouse
 
@@ -841,9 +861,9 @@ Example like JDBC
 
 2. Clickhouse write to disk
 
-  Each insert == 1 block, unless insert size > `max_insert_block_size`
+    Each insert == 1 block, unless insert size > `max_insert_block_size`
 
-  If > `max_insert_block_size`, split into 2 blocks.
+    If > `max_insert_block_size`, split into 2 blocks.
 
 ###### Client form the blocks
 
@@ -851,9 +871,9 @@ Example when using clickhouse-client, or language specific libraries (Go/Python/
 
 1. Client form the block, send to Clickhouse native format
 
-  Inside the clickhouse-client, can specify the `max_insert_block_size`.
+    Inside the clickhouse-client, can specify the `max_insert_block_size`.
 
-  This is the controlling one.
+    This is the controlling one.
 
 2. Block will get written to Clickhouse disk
 
@@ -865,6 +885,40 @@ Clickhouse WILL ALWAYS control the block size.
 
 2. Clickhouse flush the buffer, write into blocks and into disk
 
-  `max_insert_block_size` setting will control the block size.
+    `max_insert_block_size` setting will control the block size.
 
 ### Insert parallelism
+
+the thread setting is `max_thread_pool_size`
+
+#### Clickhouse ownself pull
+
+Functions like
+
+- s3
+- url
+- hdfs
+
+Each thread
+
+1. Next portion of unprocessed file, create in-memory block
+2. Write the block to new part on disk
+
+Key points
+
+- creating the block happens on Clickhouse server itself
+- only for special functions then can parallelise it
+
+#### Data pushed into Clickhouse
+
+clickhouse library running on the client
+
+Each thread
+
+1. Next portion of data
+2. Send it to Clickhouse server (as a block already)
+
+Key points
+
+- the parallel thread count happens on the client side
+- `max_thread_pool_size` still can bottleneck the insert

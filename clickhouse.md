@@ -7,7 +7,7 @@ Notes about ClickHouse.
 - Two array columns (map)
 - Inserts
 
-## Partitions ([ref](https://clickhouse.com/docs/optimize/partitioning-key)) <a name="introduction"></a>
+## Partitions ([ref](https://clickhouse.com/docs/optimize/partitioning-key))
 
 - 1 insert == 1 part PER partition
 
@@ -16,6 +16,103 @@ Notes about ClickHouse.
   Will cause negative impact to merging, need to do more work.
 
   Only can merge WITHIN the same partition.
+
+  - Example (1 insert, 1 partition)
+
+    1 partition per insert query, because the table never specify the `PARTITION BY` clause.
+
+    Clickhouse default to 1 partition.
+
+    ```sql
+    SELECT
+      query_id,
+      countDistinct(partition_id) AS partitions_per_query
+    FROM system.part_log
+    WHERE (event_type = 'NewPart') AND (`table` = 'transactions')
+    GROUP BY query_id
+    ORDER BY query_id ASC
+
+       ┌─query_id─────────────────────────────┬─partitions_per_query─┐
+    1. │ 8c1cf338-04ec-442b-ad13-56ee2269c9f3 │                    1 │
+       └──────────────────────────────────────┴──────────────────────┘
+
+    SHOW CREATE TABLE property.transactions;
+
+       ┌─statement────────────────────────────────────┐
+    1. │ CREATE TABLE property.transactions          ↴│
+       │↳(                                           ↴│
+       │↳    `project` LowCardinality(String),       ↴│
+       │↳    `street` LowCardinality(String),        ↴│
+       │↳    `market_segment` LowCardinality(String),↴│
+       │↳    `svy21_x` Nullable(Float64),            ↴│
+       │↳    `svy21_y` Nullable(Float64),            ↴│
+       │↳    `property_type` LowCardinality(String), ↴│
+       │↳    `district` UInt8,                       ↴│
+       │↳    `tenure` LowCardinality(String),        ↴│
+       │↳    `type_of_sale` UInt8,                   ↴│
+       │↳    `no_of_units` UInt16,                   ↴│
+       │↳    `price` UInt32,                         ↴│
+       │↳    `nett_price` Nullable(UInt32),          ↴│
+       │↳    `area` UInt16,                          ↴│
+       │↳    `type_of_area` LowCardinality(String),  ↴│
+       │↳    `floor_range` LowCardinality(String),   ↴│
+       │↳    `contract_date` Date                    ↴│
+       │↳)                                           ↴│
+       │↳ENGINE = MergeTree                          ↴│
+       │↳ORDER BY project                            ↴│
+       │↳SETTINGS index_granularity = 8192            │
+       └──────────────────────────────────────────────┘
+    ```
+
+  - Example (1 insert, many partitions)
+
+    ```sql
+    SELECT
+      query_id,
+      countDistinct(partition_id) AS partitions_per_query
+    FROM system.part_log
+    WHERE (event_type = 'NewPart') AND (`table` = 'transactions_partition')
+    GROUP BY query_id
+    ORDER BY query_id ASC
+
+    Query id: 5b7455f7-97ef-476f-98fd-8c8eaadcfc8c
+
+       ┌─query_id─────────────────────────────┬─partitions_per_query─┐
+    1. │ 3d2a078f-c86d-47db-a39c-8874089b0c36 │                   61 │
+       └──────────────────────────────────────┴──────────────────────┘
+
+    SHOW CREATE TABLE property.transactions_partition
+
+    Query id: 68605d20-b8ac-444a-8f0a-c4aa63eefc1c
+
+       ┌─statement────────────────────────────────────┐
+    1. │ CREATE TABLE property.transactions_partition↴│
+       │↳(                                           ↴│
+       │↳    `project` LowCardinality(String),       ↴│
+       │↳    `street` LowCardinality(String),        ↴│
+       │↳    `market_segment` LowCardinality(String),↴│
+       │↳    `svy21_x` Nullable(Float64),            ↴│
+       │↳    `svy21_y` Nullable(Float64),            ↴│
+       │↳    `property_type` LowCardinality(String), ↴│
+       │↳    `district` UInt8,                       ↴│
+       │↳    `tenure` LowCardinality(String),        ↴│
+       │↳    `type_of_sale` UInt8,                   ↴│
+       │↳    `no_of_units` UInt16,                   ↴│
+       │↳    `price` UInt32,                         ↴│
+       │↳    `nett_price` Nullable(UInt32),          ↴│
+       │↳    `area` UInt16,                          ↴│
+       │↳    `type_of_area` LowCardinality(String),  ↴│
+       │↳    `floor_range` LowCardinality(String),   ↴│
+       │↳    `contract_date` Date                    ↴│
+       │↳)                                           ↴│
+       │↳ENGINE = MergeTree                          ↴│
+       │↳PARTITION BY toYYYYMM(contract_date)        ↴│
+       │↳ORDER BY project                            ↴│
+       │↳SETTINGS index_granularity = 8192            │
+       └──────────────────────────────────────────────┘
+    ```
+
+
 
 - Performance negative impact
 

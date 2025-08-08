@@ -1019,3 +1019,82 @@ Key points
 
 - the parallel thread count happens on the client side
 - `max_thread_pool_size` still can bottleneck the insert
+
+## Async Insert ([ref](https://clickhouse.com/blog/asynchronous-data-inserts-in-clickhouse))
+
+Use this when cannot control the client input, unable to batch inserts together
+
+### How it works
+
+1. Client send insert data query
+
+2. Clickhouse buffer it into memory
+
+    By default, will block client / won't reply until the next step completed.
+
+3. Once buffer full / timeout, then Clickhouse flush to disk
+
+    Once done, then all the client will receive a response from CH
+
+### Buffer
+
+1 insert query `shape` type --> 1 buffer
+
+`shape` is just the insert query syntax
+
+- different columns inserted into
+- different settings
+- different table
+
+If only want to have 1 buffer, then all the insert must be exactly the same. except for the values.
+
+### Settings
+
+- Enable/disable async insert<br>
+  `async_insert`
+
+- Durability, can/cannot accept lost<br>
+  `wait_for_async_insert`
+
+- Control flush setting<br>
+  Flush buffer when any of the following reached first
+  - `async_insert_max_data_size`
+  - `async_insert_max_query_number`
+  - `async_insert_busy_timeout_max_ms`
+
+- Adaptive timeout setting<br>
+  - `async_insert_use_adaptive_busy_timeout`
+  - `async_insert_busy_timeout_min_ms`
+  - `async_insert_busy_timeout_increase_rate`
+  - `async_insert_busy_timeout_decrease_rate`
+
+- Dedup setting for async<br>
+  - `async_insert_deduplicate`
+
+- `async_insert_poll_timeout_ms`
+
+### `wait_for_async_insert`
+
+This is to determine how safe/durable of each insert.
+
+Async insert only writes to buffer, CH won't write to disk until flush.
+
+This setting is to allow say write to buffer means treat as written to disk.
+
+Client must be able to tolerate that the data might actually not be written to disk, lost.
+
+But with this setting, the client won't be blocked until flush.
+
+Default is `1`, must wait until flush then reply to client.
+
+### Adaptive timeout
+
+Dynamically adjust the buffer flush timing based on frequency of insert queries.
+
+When enabled, flush/start with minimal value first.
+
+If only 1 insert query, then client need to wait for the `async_insert_busy_timeout_min_ms` before CH reply to it.
+
+If 1 insert, then another 1 insert, the buffer flush timeout will increase according to `async_insert_busy_timeout_increase_rate`.
+
+Main idea is to reduce the time taken to reply to client, but balance out the number of flushes to disk.

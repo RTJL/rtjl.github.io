@@ -37,7 +37,7 @@ class Solution:
         start = 1
         while nums[start] == prev_num and start < n - 1:
             start += 1
-        
+
         # update prev num
         prev_num = nums[start - 1]
 
@@ -50,7 +50,7 @@ class Solution:
             next_idx = curr_idx + 1
             while next_idx < n and nums[next_idx] == curr_num:
                 next_idx += 1
-            
+
             # break early if next closest right is out of bounds
             if next_idx == n:
                 return res
@@ -60,11 +60,11 @@ class Solution:
             is_hill = (prev_num < curr_num) and (curr_num > nums[next_idx])
             if is_valley or is_hill:
                 res += 1
-            
+
             # update curr index to next
             curr_idx = next_idx
             prev_num = curr_num
-        
+
         return res
 ```
 
@@ -638,6 +638,97 @@ class Solution:
                     break
 
         return res
+```
+
+## Fruits Into Basket III
+
+### Time
+
+### Space
+
+```python
+```
+
+## Power of Two
+
+Bitwise `&` with the current number and current number - 1.
+
+If the number is a power of 2, it will only has one `1` in the binary representation.
+
+Works because if number is power of 2, then the number-1 in binary will always contain `1`s.
+
+After bitwise and, then the result will always be 0.
+
+2 --> `b10`
+
+- `2 - 1 = 1` --> `b1`
+
+- difference is `b10` & `b1`
+
+- `b10 & b1 = b00` --> 0
+
+4 --> `b100`
+
+- `4 - 1 = 3` --> `b11`
+
+- difference is `b100` & `b11`
+
+- `b100 & b11 = b000` --> 0
+
+8 --> `b1000`
+
+- `8 - 1 = 7` --> `b111`
+
+- difference is `b1000` & `b111`
+
+- `b1000 & b111 = b0000` --> 0
+
+### Time
+
+`O(1)`
+
+### Space
+
+`O(1)`
+
+```python
+class Solution:
+    def isPowerOfTwo(self, n: int) -> bool:
+        if n <= 0:
+            return False
+
+        return (n & (n - 1)) == 0
+```
+
+### Time
+
+`O(log n)`
+
+`n` is the number of binary digits
+
+If the number is a power of 2, it will only has one `1` in the binary representation.
+
+Keep on bitshift to the right by 1, keep track got see `1` before or not.
+
+### Space
+
+`O(1)`
+
+```python
+class Solution:
+    def isPowerOfTwo(self, n: int) -> bool:
+        if n <= 0:
+            return False
+
+        has_one = False
+        while (n > 0):
+            if n % 2 == 1:
+                if has_one:
+                    return False
+                else:
+                    has_one = True
+            n = n >> 1
+        return True
 ```
 
 ##

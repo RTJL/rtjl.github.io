@@ -731,4 +731,137 @@ class Solution:
         return True
 ```
 
+## Design Hashmap
+
+Mod the key by a fixed length
+
+Store as an array
+
+The value of each element in the array is a linked list
+
+If the value after key mod is same, then extend the linked list
+
+```python
+class Node:
+    def __init__(self, key, value):
+        self.key = key
+        self.value = value
+        self.next = None
+
+class MyHashMap:
+
+    def __init__(self):
+        self.map = [Node(None, None)] * 1000
+
+    def __get_mod_key(self, key: int):
+        return key % len(self.map)
+
+    def put(self, key: int, value: int) -> None:
+        mod_key = self.__get_mod_key(key)
+
+        # first node is a dummy node
+        curr = self.map[mod_key].next
+        prev = self.map[mod_key]
+
+        while curr != None:
+            if curr.key == key:
+                # update current to new value
+                curr.value = value
+                return
+
+            # move forward
+            prev = curr
+            curr = curr.next
+
+        # create new node, key not found in existing list
+        new_node = Node(key, value)
+        prev.next = new_node
+
+    def get(self, key: int) -> int:
+        mod_key = self.__get_mod_key(key)
+        curr = self.map[mod_key].next
+
+        while curr != None:
+            if curr.key == key:
+                return curr.value
+            curr = curr.next
+
+        return -1
+
+    def remove(self, key: int) -> None:
+        mod_key = self.__get_mod_key(key)
+
+        # first node is a dummy node
+        curr = self.map[mod_key].next
+        prev = self.map[mod_key]
+
+        while curr != None:
+            if curr.key == key:
+                prev.next = curr.next
+
+            # move forward
+            prev = curr
+            curr = curr.next
+```
+
+## Reordered Power of 2
+
+Frequency count of each digit in `n`
+
+For each `2^i`, create frequcny count of each digit
+
+Check if the frequency count matches
+
+### Time
+
+convert function takes `O(k)`, where `k` is the number of digits
+
+compare the frequency map takes `O(k)` also.
+
+`while True` loop runs at most 30 times, `2^30 > 10^9`. so its `O(1)`.
+
+### Space
+
+`O(k)` for the frequency maps
+
+```python
+class Solution:
+    def reorderedPowerOf2(self, n: int) -> bool:
+        # convert n to map of count of digits
+        def convert(n):
+            counter = {}
+            digits = 0
+            while n > 0:
+                k = n % 10
+                counter[k] = counter.get(k, 0) + 1
+                n = n // 10
+                digits += 1
+            return counter, digits
+
+        n_count, n_digits = convert(n)
+
+        start_num = math.pow(10, n_digits - 1)
+        start = math.floor(math.log(start_num, 2))
+        while True:
+            tmp = math.pow(2, start)
+            tmp_count, tmp_digits = convert(tmp)
+
+            if tmp_digits > n_digits:
+                # increase too much, different number of digits
+                break
+
+            has_answer = True
+            for k,v in n_count.items():
+                if k not in tmp_count or n_count[k] != tmp_count[k]:
+                    has_answer = False
+                    break
+
+            if has_answer:
+                return True
+
+            start += 1
+
+        return False
+```
+
 ##

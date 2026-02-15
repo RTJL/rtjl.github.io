@@ -3,7 +3,7 @@ layout: default
 title: Reuben's Blog
 ---
 <nav style="margin-bottom: 1.5em; padding: 0.5em 0; border-bottom: 1px solid #eee;">
-  <a href="/">Home</a> &nbsp;|&nbsp; <a href="/about/">About</a>
+  <a href="/">Home</a> &nbsp;|&nbsp; <a href="/about">About</a>
 </nav>
 
 | Title | |

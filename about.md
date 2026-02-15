@@ -2,11 +2,6 @@
   <a href="/">Home</a> &nbsp;|&nbsp; <a href="/about">About</a>
 </nav>
 
-# Reuben Tan
-[reubentjl@gmail.com]
-
----
-
 ## **Professional Summary**
 Results-driven software engineer with deep expertise in building scalable observability systems, infrastructure automation, and performance optimization. Experienced in designing and re-architecting large-scale systems, optimizing data pipelines, and implementing cost-effective cloud infrastructure. Proven ability to lead critical backend engineering efforts across distributed teams while consistently delivering measurable impact.
 
